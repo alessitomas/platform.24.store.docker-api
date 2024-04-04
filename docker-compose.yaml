@@ -90,6 +90,27 @@ services:
       - db-store
       - discovery
 
+  job:
+    build:
+      context: ../platform.24.store.job-resource/
+      dockerfile: Dockerfile
+    image: store-job:latest
+    environment:
+      - spring.datasource.url=jdbc:postgresql://store-db-store:5432/store
+      - spring.datasource.username=store
+      - spring.datasource.password=store
+      - eureka.client.service-url.defaultZone=http://store-discovery:8761/eureka/
+    deploy:
+      mode: replicated
+      replicas: 1
+    restart: always
+    networks:
+      - private-network
+    depends_on:
+      - db-store
+      - discovery
+
+
   auth:
     build:
       context: ../platform.24.store.auth-resource/
