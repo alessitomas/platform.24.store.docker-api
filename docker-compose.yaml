@@ -18,6 +18,15 @@ services:
     networks:
       - private-network
 
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    restart: always
+    networks:
+      - private-network
+
   prometheus:
     image: prom/prometheus:latest
     container_name: store-prometheus
@@ -54,6 +63,7 @@ services:
     restart: always
     networks:
       - private-network
+      
 
   gateway:
     build:
@@ -69,6 +79,7 @@ services:
       - private-network
     depends_on:
       - discovery
+      
 
   account:
     build:
@@ -89,6 +100,9 @@ services:
     depends_on:
       - db-store
       - discovery
+      - redis
+      
+
 
   job:
     build:
@@ -109,6 +123,7 @@ services:
     depends_on:
       - db-store
       - discovery
+      - redis
 
   inscricao:
     build:
@@ -131,6 +146,8 @@ services:
     depends_on:
       - db-store
       - discovery
+      - redis
+
 
   auth:
     build:
@@ -147,6 +164,8 @@ services:
     depends_on:
       - discovery
       - account
+
+
 
 networks:
   private-network:
