@@ -19,10 +19,15 @@ services:
       - private-network
 
   redis:
-    container_name: redis
+    container_name: my-redis
     image: redis:latest
     ports:
       - 6379:6379
+    environment:
+      - REDIS_HOST=my-redis
+      - REDIS_PORT=6379
+    volumes:
+      - $VOLUME/redis:/data
     restart: always
     networks:
       - private-network
