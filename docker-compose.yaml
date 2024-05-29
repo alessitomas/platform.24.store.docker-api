@@ -19,18 +19,19 @@ services:
       - private-network
 
   redis:
-    container_name: my-redis
+    container_name: store-redis
     image: redis:latest
     ports:
       - 6379:6379
     environment:
-      - REDIS_HOST=my-redis
+      - REDIS_HOST=store-redis
       - REDIS_PORT=6379
     volumes:
       - $VOLUME/redis:/data
     restart: always
     networks:
       - private-network
+
 
   prometheus:
     image: prom/prometheus:latest
@@ -105,7 +106,7 @@ services:
     depends_on:
       - db-store
       - discovery
-      - redis
+
       
 
 
@@ -119,6 +120,8 @@ services:
       - spring.datasource.username=store
       - spring.datasource.password=store
       - eureka.client.service-url.defaultZone=http://store-discovery:8761/eureka/
+      - spring.redis.host=redis
+      - spring.redis.port=6379
     deploy:
       mode: replicated
       replicas: 1
